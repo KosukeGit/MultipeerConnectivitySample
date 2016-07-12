@@ -143,10 +143,25 @@ class ViewController: UIViewController, MCBrowserViewControllerDelegate, MCSessi
             
             print("\(data)")  // 確認
             
-            if UIImage(data: data) != nil {
-                let receivedImage = UIImage(data: data)  // UIImage型に変換
-                UIImageWriteToSavedPhotosAlbum(receivedImage!, self, nil, nil)  // カメラロールに保存
-            }
+            // アラート表示設定(スタイルはAlert)
+            let alertController: UIAlertController = UIAlertController(title: "確認", message: "受け取った写真を保存しますか？", preferredStyle: UIAlertControllerStyle.Alert)
+            
+            // OKの場合
+            let defaultAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler:{
+                action in if UIImage(data: data) != nil {
+                    let receivedImage = UIImage(data: data)  // UIImage型に変換
+                    UIImageWriteToSavedPhotosAlbum(receivedImage!, self, nil, nil)  // カメラロールに保存
+                }
+            })
+            
+            // キャンセルの場合
+            let cancelAction: UIAlertAction = UIAlertAction(title: "キャンセル", style: UIAlertActionStyle.Cancel, handler:{
+                action in return
+            })
+            
+            alertController.addAction(defaultAction)
+            alertController.addAction(cancelAction)
+            self.presentViewController(alertController, animated: true, completion: nil)
         }
     }
     
